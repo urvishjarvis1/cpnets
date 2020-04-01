@@ -189,7 +189,8 @@ public class AI_assignment_3 {
                depedents.dependedVariable.add(0);
                listDepedentses.add(i,depedents);
            }else{
-                for(int j=0;j<numberOfParent-numberOfParent+i&&j<numberOfParent;j++){
+                int randomParentsize=randomGen.nextInt(numberOfParent+1);
+                for(int j=0;j<i&&j<randomParentsize;j++){
                     int a=randomGen.nextInt(i-1);
                     while(isPresentInParent(depedents.dependedVariable,a)){
                         a=randomGen.nextInt(i);
@@ -220,7 +221,10 @@ public class AI_assignment_3 {
      */
     private void printDependency() {
         System.out.println("\n\nDependencies: ");
-        for(int i=1;i<listDepedentses.size();i++){
+        for(int i=0;i<listDepedentses.size();i++){
+            if(listDepedentses.get(i).dependedVariable.isEmpty()){
+                System.out.print("Nil");
+            }
             for(Integer j:listDepedentses.get(i).dependedVariable){
                 System.out.print("X"+j+",");
             }
@@ -229,35 +233,33 @@ public class AI_assignment_3 {
     }
 
     private void generateCPnets() {
-//        for(int i=1;i<listDepedentses.size();i++){
-//            for(int j=0;j<listDepedentses.get(i).dependedVariable.size();j++){
-//               
-//            }
-//        }
-        
         for(int i=0;i<numberOfVar;i++){
             CPTable cpTable=new CPTable();
-            ArrayList<CPnets> cpNetsList=new ArrayList<CPnets>();
-            for(int j=1;j<Math.pow(domainSize,listDepedentses.size());j++){
+            
+            for(int j=1;j<Math.pow(domainSize,listDepedentses.get(i).dependedVariable.size())+1;j++){
+                ArrayList<CPnets> cpNetsList=new ArrayList<CPnets>();
                 CPnets cp=new CPnets();
-                ArrayList<Integer> tempDomains=domains;
-                Collections.shuffle(tempDomains);
-                cp.ordering=tempDomains;
+                Collections.shuffle(domains,new Random(2));
+                cp.ordering.addAll(domains);
                 cpNetsList.add(cp);
+                cpTable.cpnets.add(cpNetsList);
             }
-            cpTable.cpnets.add(cpNetsList);
+            
             cpTables.add(cpTable);
         }
     }
 
     private void printCPNets() {
+        System.out.println("\n");
+        int j=0;
         for(CPTable cp:cpTables){
+            System.out.println("X"+ j++ +":");
             for(ArrayList<CPnets> cpnets:cp.cpnets){
                 for(CPnets cpnet:cpnets){
                     for(Integer i:cpnet.ordering){
                          System.out.print(""+i+">");
                     }
-                    System.out.println("\n");
+                    System.out.println("");
                 }
             }
         }
